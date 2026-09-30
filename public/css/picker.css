@@ -1,0 +1,271 @@
+/* Field Guard - configuration screen and in-iframe picker. */
+
+/* ------------------------------------------------- parent (config page) --- */
+
+/* Small print on the config screen.
+
+   Deliberately not Bootstrap's `.small`: GLPI 10's palettes ship
+   `#page .small, .qtip .small, .modal .modal-body .small { width: 1%; }`,
+   which collapses any `.small` on a GLPI page to a few pixels wide. */
+.fieldguard-hint,
+.fieldguard-status {
+    display: inline-block;
+    width: auto;
+    font-size: .75rem;
+    line-height: 1.4;
+}
+
+.fieldguard-hint {
+    color: var(--tblr-secondary, #6c757d);
+}
+
+/* Caption introducing the pills of one host object. */
+.fieldguard-pill-host {
+    display: inline-block;
+    align-self: center;
+    margin-inline-end: .25rem;
+    padding-inline-start: .5rem;
+    border-inline-start: 2px solid var(--tblr-border-color, #dee2e6);
+    font-size: .75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    opacity: .6;
+}
+
+.fieldguard-pill-host:first-child {
+    border-inline-start: 0;
+    padding-inline-start: 0;
+}
+
+.fieldguard-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .375rem;
+}
+
+.fieldguard-frame-wrap {
+    height: 70vh;
+    min-height: 420px;
+    background: var(--tblr-bg-surface-secondary, #f8f9fa);
+}
+
+.fieldguard-frame {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+}
+
+/* --------------------------------------------------- inside the iframe --- */
+
+/* Strip the chrome so only the form is left to click on.
+
+   `#tabspanel`, GLPI's own tab rail, is deliberately NOT in this list: it is
+   how the admin reaches costs, linked items, contracts and anything another
+   plugin adds. Offering those as buttons of our own could never be complete
+   and would fill the screen; navigating the real tabs is both.
+
+   `.card-footer` is not in this list either: GLPI puts that class on
+   `.itil-right-side`, the panel holding a ticket's status, urgency, priority
+   and SLA fields, so hiding it would hide exactly the fields worth locking. */
+.fieldguard-pick-mode .navbar,
+.fieldguard-pick-mode .page-header,
+.fieldguard-pick-mode footer,
+.fieldguard-pick-mode #footer,
+.fieldguard-pick-mode .form-buttons,
+.fieldguard-pick-mode #itil-footer {
+    display: none !important;
+}
+
+.fieldguard-pick-mode .itil-left-side,
+.fieldguard-pick-mode .itil-right-side {
+    padding-left: .5rem !important;
+    padding-right: .5rem !important;
+}
+
+/* The tab rail is the navigation, so keep it reachable and out of the way of
+   the crosshair used for picking. */
+.fieldguard-pick-mode #tabspanel {
+    cursor: default;
+}
+
+.fieldguard-pick-mode #tabspanel .nav-link {
+    cursor: pointer;
+}
+
+.fieldguard-pick-mode {
+    cursor: crosshair;
+}
+
+.fieldguard-pick-target {
+    position: relative;
+    outline: 1px dashed rgba(32, 107, 196, .35);
+    outline-offset: 2px;
+    border-radius: 4px;
+    transition: background-color .12s ease, outline-color .12s ease;
+}
+
+/* The real control must never take the click; the wrapper handles it. */
+.fieldguard-pick-target input,
+.fieldguard-pick-target select,
+.fieldguard-pick-target textarea,
+.fieldguard-pick-target .select2-container,
+.fieldguard-pick-target button,
+.fieldguard-pick-target a {
+    pointer-events: none !important;
+}
+
+.fieldguard-pick-target:hover {
+    background-color: rgba(32, 107, 196, .08);
+    outline-color: rgba(32, 107, 196, .9);
+}
+
+.fieldguard-pick-badge {
+    position: absolute;
+    top: -.55rem;
+    right: .25rem;
+    z-index: 5;
+    padding: 0 .3rem;
+    border-radius: 3px;
+    font-size: .625rem;
+    font-family: monospace;
+    line-height: 1.4;
+    color: #fff;
+    background: #206bc4;
+    opacity: 0;
+    transition: opacity .12s ease;
+    pointer-events: none;
+}
+
+.fieldguard-pick-target:hover .fieldguard-pick-badge {
+    opacity: 1;
+}
+
+/* Picked: this field is locked by the rule being edited. */
+.fieldguard-pick-target.fieldguard-pick-on {
+    background-color: rgba(108, 117, 125, .18);
+    outline: 2px solid #6c757d;
+}
+
+.fieldguard-pick-target.fieldguard-pick-on input,
+.fieldguard-pick-target.fieldguard-pick-on select,
+.fieldguard-pick-target.fieldguard-pick-on textarea,
+.fieldguard-pick-target.fieldguard-pick-on .select2-selection {
+    background-color: #e9ecef !important;
+    color: #6c757d !important;
+}
+
+.fieldguard-pick-target.fieldguard-pick-on .fieldguard-pick-badge {
+    opacity: 1;
+    background: #6c757d;
+}
+
+/* Hidden fields get their own colour: the field disappears for the user rather
+   than being greyed out, which is worth telling apart at a glance. */
+.fieldguard-pick-target.fieldguard-pick-on[data-fieldguard-mode="hidden"] {
+    outline-style: dashed;
+    outline-color: #d6336c;
+    background-color: rgba(214, 51, 108, .12);
+}
+
+.fieldguard-pick-target.fieldguard-pick-on[data-fieldguard-mode="hidden"] .fieldguard-pick-badge {
+    background: #d6336c;
+}
+
+/* Give the preview the full iframe width: the surrounding GLPI chrome is
+   hidden, so its layout offsets would otherwise leave a large empty gutter. */
+.fieldguard-pick-mode .sidebar,
+.fieldguard-pick-mode aside,
+.fieldguard-pick-mode .toast-container {
+    display: none !important;
+}
+
+.fieldguard-pick-mode #page,
+.fieldguard-pick-mode .page-wrapper,
+.fieldguard-pick-mode .page {
+    margin-left: 0 !important;
+    padding-left: .75rem !important;
+    padding-right: .75rem !important;
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+/* A field belonging to another itemtype rendered inside this form: an
+   ITILFollowup or TicketTask field inside a Ticket's timeline, for example.
+   Still clickable - it just saves under its own itemtype. */
+.fieldguard-pick-target.fieldguard-pick-foreign {
+    outline-style: dotted;
+    outline-color: rgba(130, 80, 223, .55);
+}
+
+.fieldguard-pick-target.fieldguard-pick-foreign:hover {
+    background-color: rgba(130, 80, 223, .08);
+    outline-color: rgba(130, 80, 223, .95);
+}
+
+.fieldguard-pick-target.fieldguard-pick-foreign .fieldguard-pick-badge {
+    background: #8250df;
+}
+
+
+/* ------------------------------------------------------- isolate mode --- */
+
+/* Followups, tasks, solutions and approvals are previewed through their parent
+   ticket, which also renders its own form and the whole timeline. When one of
+   them is the itemtype being configured, everything else is noise: show only
+   that block, expanded. */
+
+.fieldguard-pick-mode[data-fieldguard-isolate] .timeline-item,
+.fieldguard-pick-mode[data-fieldguard-isolate] .itil-right-side,
+.fieldguard-pick-mode[data-fieldguard-isolate] .timeline-header,
+.fieldguard-pick-mode[data-fieldguard-isolate] .navigationheader {
+    display: none !important;
+}
+
+.fieldguard-pick-mode[data-fieldguard-isolate] .timeline-item.fieldguard-isolated {
+    display: block !important;
+    margin-left: 0 !important;
+    max-width: 100% !important;
+}
+
+.fieldguard-pick-mode[data-fieldguard-isolate] .itil-left-side {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+}
+
+/* Trim what is left of the timeline wrapper around the isolated form: the
+   author avatar and the "close answer" button belong to the timeline UI, not
+   to the form being configured. */
+.fieldguard-pick-mode[data-fieldguard-isolate] .fieldguard-isolated .avatar,
+.fieldguard-pick-mode[data-fieldguard-isolate] .fieldguard-isolated .close-itil-answer {
+    display: none !important;
+}
+
+/* The timeline indents answers to the right; isolated, the form should simply
+   use the width it has. */
+.fieldguard-pick-mode[data-fieldguard-isolate] .fieldguard-isolated > .row > .content-part,
+.fieldguard-pick-mode[data-fieldguard-isolate] .fieldguard-isolated > .row > [class*="col-"] {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+}
+
+.fieldguard-pick-mode[data-fieldguard-isolate] .fieldguard-isolated .timeline-content {
+    margin-top: 0 !important;
+}
+
+/* The speech-bubble arrow has no meaning outside the timeline. */
+.fieldguard-pick-mode[data-fieldguard-isolate] .fieldguard-isolated .timeline-content::before,
+.fieldguard-pick-mode[data-fieldguard-isolate] .fieldguard-isolated .timeline-content::after {
+    display: none !important;
+}
+
+/* Timeline forms label their fields with icons only, so in isolate mode the
+   name badge is the only way to tell them apart: keep it on permanently. */
+.fieldguard-pick-mode[data-fieldguard-isolate] .fieldguard-isolated .fieldguard-pick-badge {
+    opacity: 1;
+    top: -.4rem;
+    left: .25rem;
+    right: auto;
+}

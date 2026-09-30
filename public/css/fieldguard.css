@@ -1,0 +1,40 @@
+/* Field Guard - how a locked field looks to the end user. */
+
+.fieldguard-locked {
+    position: relative;
+    background-color: var(--tblr-bg-surface-secondary, #f1f3f5);
+    border-radius: 4px;
+    opacity: .85;
+}
+
+.fieldguard-locked label,
+.fieldguard-locked .col-form-label {
+    color: var(--tblr-secondary, #6c757d) !important;
+}
+
+.fieldguard-locked-input,
+.fieldguard-locked input,
+.fieldguard-locked select,
+.fieldguard-locked textarea,
+.fieldguard-locked .select2-selection {
+    background-color: var(--tblr-bg-surface-secondary, #e9ecef) !important;
+    color: var(--tblr-secondary, #6c757d) !important;
+    cursor: not-allowed !important;
+    pointer-events: none;
+    box-shadow: none !important;
+}
+
+/* select2 renders its own widget next to the (now disabled) native control. */
+.fieldguard-locked .select2-container {
+    pointer-events: none;
+    opacity: .7;
+}
+
+.fieldguard-locked .select2-selection__clear,
+.fieldguard-locked .select2-selection__arrow {
+    display: none !important;
+}
+
+.fieldguard-hidden {
+    display: none !important;
+}
